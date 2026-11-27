@@ -1,0 +1,42 @@
+{
+  "_comment": "HAND-WRITTEN PARSER TEST FIXTURE showing the RFC 8040 JSON shape of the ODL pcep-topology. It is NOT a captured controller response and must never be presented as evidence. Replace with a real capture (evidence folder) once the lab is up.",
+  "network-topology:topology": [
+    {
+      "topology-id": "pcep-topology",
+      "node": [
+        {
+          "node-id": "pcc://192.168.56.11",
+          "network-topology-pcep:path-computation-client": {
+            "ip-address": "192.168.56.11",
+            "state-sync": "synchronized",
+            "reported-lsp": [
+              {
+                "name": "SN3625-PCE-R1-R3-VIA-R2",
+                "path": [
+                  {
+                    "lsp-id": 2,
+                    "odl-pcep-ietf-stateful:lsp": {
+                      "plsp-id": 7, "operational": "up", "administrative": true, "delegate": true,
+                      "tlvs": {"lsp-identifiers": {"lsp-id": 2, "tunnel-id": 10,
+                               "ipv4": {"ipv4-tunnel-sender-address": "1.1.36.25",
+                                        "ipv4-tunnel-endpoint-address": "3.3.36.25"}}}
+                    },
+                    "ero": {"subobject": [
+                      {"loose": false, "ip-prefix": {"ip-prefix": "10.36.12.2/32"}},
+                      {"loose": false, "ip-prefix": {"ip-prefix": "10.36.23.2/32"}}]},
+                    "rro": {"subobject": [
+                      {"protection-available": false, "ip-prefix": {"ip-prefix": "10.36.12.2/32"}},
+                      {"label": {"uni-directional": true}},
+                      {"protection-available": false, "ip-prefix": {"ip-prefix": "10.36.23.2/32"}}]}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {"node-id": "pcc://192.168.56.12", "network-topology-pcep:path-computation-client": {"ip-address": "192.168.56.12", "state-sync": "synchronized"}},
+        {"node-id": "pcc://192.168.56.13", "network-topology-pcep:path-computation-client": {"ip-address": "192.168.56.13", "state-sync": "synchronized"}}
+      ]
+    }
+  ]
+}

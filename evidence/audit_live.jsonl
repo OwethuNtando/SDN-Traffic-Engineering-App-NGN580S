@@ -1,0 +1,83 @@
+{"ts": "2026-11-12T17:29:22", "level": "INFO", "category": "app", "message": "Started in OFFLINE SIMULATION mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.example.json", "student": "222313625"}
+{"ts": "2026-11-12T17:29:22", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-12T17:29:23", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 0 LSP(s) [SIMULATED]"}
+{"ts": "2026-11-12T17:29:23", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-12T17:29:32", "level": "WARN", "category": "te", "message": "D=7.250 Mb/s T=75%: MLU before 108.5% -> after 72.5%. Shortest path R1-R3 would reach 108.5 % on L13 (>= 75 %). Path R1-R2-R3 gives MLU 72.5 % (bottleneck L12, available 10.00 Mb/s) at +10 IGP cost and +1.0 ms assumed delay.", "demand": 7.25, "mlu_before": 108.5, "mlu_after": 72.5, "recommended": "R1-R2-R3"}
+{"ts": "2026-11-12T17:29:47", "level": "OK", "category": "lsp", "message": "Provision LSP-3625-R1R3-VIAR2: OPERATIONAL - operational=up; observed path R1-R2-R3 from RRO (matches intended path)", "steps": [["INTENDED", "LSP-3625-R1R3-VIAR2: R1-R2-R3  ERO ['10.36.12.2', '10.36.23.3']"], ["REQUESTED", "POST add-lsp node=pcc://10.36.25.1 name=LSP-3625-R1R3-VIAR2"], ["ACCEPTED", "HTTP 200, no RPC failure. Verifying in PCEP LSP-DB (accepted is NOT operational)..."], ["REPORTED", "Present in LSP-DB of pcc://10.36.25.1: operational=going-up"], ["OPERATIONAL", "operational=up; observed path R1-R2-R3 from RRO (matches intended path)"]], "simulated": true}
+{"ts": "2026-11-12T17:29:47", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s) [SIMULATED]"}
+{"ts": "2026-11-12T19:43:30", "level": "INFO", "category": "app", "message": "Started in OFFLINE SIMULATION mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.example.json", "student": "222313625"}
+{"ts": "2026-11-12T19:43:30", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-12T19:43:31", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 0 LSP(s) [SIMULATED]"}
+{"ts": "2026-11-12T19:43:31", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-12T20:54:16", "level": "INFO", "category": "app", "message": "Started in LIVE mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.json", "student": "222313625"}
+{"ts": "2026-11-12T20:54:16", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-12T20:54:16", "level": "WARN", "category": "controller", "message": "ODL_USER/ODL_PASS not set - use the Credentials... button"}
+{"ts": "2026-11-12T20:55:52", "level": "INFO", "category": "controller", "message": "Credentials updated for this session (not stored)"}
+{"ts": "2026-11-12T20:55:52", "level": "OK", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 3/3 routers started, 3 router links - topology taken from GNS3"}
+{"ts": "2026-11-12T20:55:57", "level": "INFO", "category": "controller", "message": "Controller not reachable at configured address; scanning 192.168.56.0/24 for port 8181..."}
+{"ts": "2026-11-12T20:55:58", "level": "ERROR", "category": "controller", "message": "No host on 192.168.56.0/24 answers on port 8181"}
+{"ts": "2026-11-12T20:55:58", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T20:55:58", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-12T20:56:15", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T20:58:32", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T21:47:01", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T21:47:11", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T21:47:21", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T21:47:31", "level": "ERROR", "category": "controller", "message": "Controller unreachable at http://192.168.56.10:8181 (ConnectTimeout)"}
+{"ts": "2026-11-12T21:47:56", "level": "INFO", "category": "app", "message": "Started in LIVE mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.json", "student": "222313625"}
+{"ts": "2026-11-12T21:47:56", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-12T21:47:56", "level": "WARN", "category": "controller", "message": "ODL_USER/ODL_PASS not set - use the Credentials... button"}
+{"ts": "2026-11-12T21:48:09", "level": "INFO", "category": "controller", "message": "Credentials updated for this session (not stored)"}
+{"ts": "2026-11-12T21:48:09", "level": "OK", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 3/3 routers started, 3 router links - topology taken from GNS3"}
+{"ts": "2026-11-12T21:48:09", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T21:48:09", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-12T22:32:16", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T22:32:19", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T22:32:37", "level": "INFO", "category": "app", "message": "Started in LIVE mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.json", "student": "222313625"}
+{"ts": "2026-11-12T22:32:37", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-12T22:32:37", "level": "WARN", "category": "controller", "message": "ODL_USER/ODL_PASS not set - use the Credentials... button"}
+{"ts": "2026-11-12T22:33:43", "level": "INFO", "category": "controller", "message": "Credentials updated for this session (not stored)"}
+{"ts": "2026-11-12T22:33:43", "level": "OK", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 3/3 routers started, 3 router links - topology taken from GNS3"}
+{"ts": "2026-11-12T22:33:43", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T22:33:43", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-12T23:50:12", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T23:50:13", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T23:55:08", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T23:55:10", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-12T23:55:11", "level": "ERROR", "category": "controller", "message": "401 Unauthorized - check ODL_USER / ODL_PASS"}
+{"ts": "2026-11-13T00:22:58", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:22:58", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:23:22", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:23:22", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:23:32", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:23:32", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:39:33", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:39:33", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:40:24", "level": "WARN", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 2/3 routers started, 3 router links"}
+{"ts": "2026-11-13T00:40:24", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:40:24", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:41:48", "level": "WARN", "category": "controller", "message": "BGP-LS topology 'example-linkstate-topology' not present"}
+{"ts": "2026-11-13T00:41:48", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:45:31", "level": "INFO", "category": "app", "message": "Started in LIVE mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.json", "student": "222313625"}
+{"ts": "2026-11-13T00:45:31", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-13T00:45:31", "level": "WARN", "category": "controller", "message": "ODL_USER/ODL_PASS not set - use the Credentials... button"}
+{"ts": "2026-11-13T00:45:50", "level": "INFO", "category": "controller", "message": "Credentials updated for this session (not stored)"}
+{"ts": "2026-11-13T00:45:51", "level": "OK", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 3/3 routers started, 3 router links - topology taken from GNS3"}
+{"ts": "2026-11-13T00:45:51", "level": "WARN", "category": "bgp", "message": "R1-ODL BGP: NO PEER 192.168.56.11 in RIB bgp-3625"}
+{"ts": "2026-11-13T00:45:51", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T00:45:51", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-13T01:03:27", "level": "INFO", "category": "app", "message": "Started in LIVE mode, config C:\\Users\\222313625\\Downloads\\FSA Networks\\ngn580s_te_app\\config\\config.json", "student": "222313625"}
+{"ts": "2026-11-13T01:03:27", "level": "INFO", "category": "student", "message": "Derived from student number: te.demand_mbps, te.threshold_pct, links.L13.background_mbps.R1>R3"}
+{"ts": "2026-11-13T01:03:27", "level": "WARN", "category": "controller", "message": "ODL_USER/ODL_PASS not set - use the Credentials... button"}
+{"ts": "2026-11-13T01:03:53", "level": "INFO", "category": "controller", "message": "Credentials updated for this session (not stored)"}
+{"ts": "2026-11-13T01:03:53", "level": "OK", "category": "gns3", "message": "GNS3 project 'Tunzi GA5': 3/3 routers started, 3 router links - topology taken from GNS3"}
+{"ts": "2026-11-13T01:03:53", "level": "WARN", "category": "bgp", "message": "R1-ODL BGP: NO PEER 192.168.56.11 in RIB bgp-3625"}
+{"ts": "2026-11-13T01:03:53", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T01:03:53", "level": "OK", "category": "te", "message": "D=3.625 Mb/s T=75%: MLU before 72.2% -> after 72.2%. Shortest path R1-R3 stays below the 75 % threshold (MLU 72.2 %, headroom 2.8 pp): no re-route needed.", "demand": 3.625, "mlu_before": 72.25, "mlu_after": 72.25, "recommended": "R1-R3"}
+{"ts": "2026-11-13T01:07:22", "level": "WARN", "category": "te", "message": "D=7.250 Mb/s T=75%: MLU before 108.5% -> after 72.5%. Shortest path R1-R3 would reach 108.5 % on L13 (>= 75 %). Path R1-R2-R3 gives MLU 72.5 % (bottleneck L12, available 10.00 Mb/s) at +10 IGP cost and +1.0 ms assumed delay.", "demand": 7.25, "mlu_before": 108.5, "mlu_after": 72.5, "recommended": "R1-R2-R3"}
+{"ts": "2026-11-13T01:07:44", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T01:08:13", "level": "ERROR", "category": "lsp", "message": "Provision SN3625-PCE-R1-R3-VIA-R2: FAILED - Controller unreachable: Controller unreachable at http://192.168.56.110:8181 (ReadTimeout)", "steps": [["INTENDED", "SN3625-PCE-R1-R3-VIA-R2: R1-R2-R3  ERO ['10.36.12.2', '10.36.23.2']"], ["REQUESTED", "POST add-lsp node=pcc://192.168.56.11 name=SN3625-PCE-R1-R3-VIA-R2"], ["FAILED", "Controller unreachable: Controller unreachable at http://192.168.56.110:8181 (ReadTimeout)"]], "simulated": false}
+{"ts": "2026-11-13T01:08:13", "level": "OK", "category": "controller", "message": "Refreshed: 3 PCC(s), 1 LSP(s)"}
+{"ts": "2026-11-13T01:08:58", "level": "OK", "category": "controller", "message": "Refreshed: 2 PCC(s), 0 LSP(s)"}
+{"ts": "2026-11-13T01:09:51", "level": "OK", "category": "controller", "message": "Refreshed: 1 PCC(s), 0 LSP(s)"}
+{"ts": "2026-11-13T01:10:49", "level": "OK", "category": "controller", "message": "Refreshed: 1 PCC(s), 0 LSP(s)"}

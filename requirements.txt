@@ -1,0 +1,6 @@
+# Runtime
+requests>=2.28
+# Tests
+pytest>=7
+# Optional - only for the "cli" (measured interface counters) load source:
+# netmiko>=4.2

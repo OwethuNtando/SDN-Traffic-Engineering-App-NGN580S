@@ -1,0 +1,320 @@
+{
+  "info": {
+    "name": "NGN580S T3 - TE app independent verification (student 222313625)",
+    "description": "Independent verification of the TE application's controller actions against OpenDaylight 0.20.2 (RFC 8040 /rests). Set odl_user/odl_pass in a Postman ENVIRONMENT (not in this collection). Adjust IPs to the GA5 build.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{odl_user}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{odl_pass}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "odl",
+      "value": "http://192.168.56.110:8181"
+    },
+    {
+      "key": "pcc_r1",
+      "value": "pcc://192.168.56.11"
+    },
+    {
+      "key": "pcc_r1_enc",
+      "value": "pcc:%2F%2F192.168.56.11"
+    },
+    {
+      "key": "lo_r1",
+      "value": "1.1.36.25"
+    },
+    {
+      "key": "lo_r3",
+      "value": "3.3.36.25"
+    },
+    {
+      "key": "lsp_via",
+      "value": "SN3625-PCE-R1-R3-VIA-R2"
+    },
+    {
+      "key": "lsp_direct",
+      "value": "SN3625-PCE-R1-R3-DIRECT"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 Read state",
+      "item": [
+        {
+          "name": "PCEP topology (all PCCs + LSP-DB)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/data/network-topology:network-topology/topology=pcep-topology?content=nonconfig",
+            "description": "F0/F2: PCEP sessions of R1, R2, R3"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "LSP-DB R1 (verify operational / absent)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/data/network-topology:network-topology/topology=pcep-topology/node={{pcc_r1_enc}}?content=nonconfig",
+            "description": "F7/F8/F9: use after provision (expect operational=up, check ERO/RRO) and after teardown (expect name absent)"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const t = pm.response.text();",
+                  "pm.test('LSP '+pm.collectionVariables.get('lsp_via')+' present?', () => {});",
+                  "console.log('present:', t.includes(pm.collectionVariables.get('lsp_via')), ' up:', /\"operational\"\\s*:\\s*\"(up|active)\"/.test(t));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "BGP-LS topology",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/data/network-topology:network-topology/topology=example-linkstate-topology?content=nonconfig",
+            "description": "Cross-check of link metrics/bandwidth learned over BGP-LS from R1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 LSP actions (same payloads as the app)",
+      "item": [
+        {
+          "name": "add-lsp R1-R2-R3 (TE proposal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/operations/network-topology-pcep:add-lsp",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": {\n    \"node\": \"{{pcc_r1}}\",\n    \"name\": \"{{lsp_via}}\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"endpoints-obj\": {\n        \"ipv4\": {\n          \"source-ipv4-address\": \"{{lo_r1}}\",\n          \"destination-ipv4-address\": \"{{lo_r3}}\"\n        }\n      },\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.12.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.23.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200,204));",
+                  "pm.test('No RPC failure in output', () => { if (pm.response.text()) { const o = JSON.stringify(pm.response.json()); pm.expect(o).to.not.include('\"failure\"'); } });",
+                  "// NOTE: success here = ACCEPTED only. Run 'LSP-DB R1' and check operational=up for verification."
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "add-lsp R1-R3 direct",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/operations/network-topology-pcep:add-lsp",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": {\n    \"node\": \"{{pcc_r1}}\",\n    \"name\": \"{{lsp_direct}}\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"endpoints-obj\": {\n        \"ipv4\": {\n          \"source-ipv4-address\": \"{{lo_r1}}\",\n          \"destination-ipv4-address\": \"{{lo_r3}}\"\n        }\n      },\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.13.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200,204));",
+                  "pm.test('No RPC failure in output', () => { if (pm.response.text()) { const o = JSON.stringify(pm.response.json()); pm.expect(o).to.not.include('\"failure\"'); } });",
+                  "// NOTE: success here = ACCEPTED only. Run 'LSP-DB R1' and check operational=up for verification."
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "remove-lsp (via R2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/operations/network-topology-pcep:remove-lsp",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": {\n    \"node\": \"{{pcc_r1}}\",\n    \"name\": \"{{lsp_via}}\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\"\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200,204));",
+                  "pm.test('No RPC failure in output', () => { if (pm.response.text()) { const o = JSON.stringify(pm.response.json()); pm.expect(o).to.not.include('\"failure\"'); } });",
+                  "// NOTE: success here = ACCEPTED only. Run 'LSP-DB R1' and check operational=up for verification."
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "remove-lsp (direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/operations/network-topology-pcep:remove-lsp",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": {\n    \"node\": \"{{pcc_r1}}\",\n    \"name\": \"{{lsp_direct}}\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\"\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200,204));",
+                  "pm.test('No RPC failure in output', () => { if (pm.response.text()) { const o = JSON.stringify(pm.response.json()); pm.expect(o).to.not.include('\"failure\"'); } });",
+                  "// NOTE: success here = ACCEPTED only. Run 'LSP-DB R1' and check operational=up for verification."
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3 Negative tests (T6)",
+      "item": [
+        {
+          "name": "add-lsp unknown PCC (expect failure)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/yang-data+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/yang-data+json"
+              }
+            ],
+            "url": "{{odl}}/rests/operations/network-topology-pcep:add-lsp",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": {\n    \"node\": \"pcc://10.99.99.99\",\n    \"name\": \"SN3625-PCE-NEG\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"endpoints-obj\": {\n        \"ipv4\": {\n          \"source-ipv4-address\": \"{{lo_r1}}\",\n          \"destination-ipv4-address\": \"{{lo_r3}}\"\n        }\n      },\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.13.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Rejected or failure reported', () => { const t = pm.response.text(); pm.expect(pm.response.code >= 400 || t.includes('failure')).to.be.true; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

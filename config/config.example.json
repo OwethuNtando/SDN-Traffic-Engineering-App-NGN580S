@@ -1,0 +1,129 @@
+{
+  "_comment": "Copy to config/config.json and edit. NEVER put passwords here: credentials are read from environment variables (ODL_USER/ODL_PASS, XR_USER/XR_PASS) or asked for at start-up.",
+  "student_number": "222313625",
+  "mode": "offline",
+  "controller": {
+    "base_url": "http://192.168.56.110:8181",
+    "restconf_root": "/rests",
+    "username_env": "ODL_USER",
+    "password_env": "ODL_PASS",
+    "timeout_s": 5,
+    "verify_tls": false,
+    "pcep_topology_id": "pcep-topology",
+    "bgpls_topology_id": "",
+    "rpc_input_key": "input",
+    "lsp_augment_key": "odl-pcep-ietf-stateful:lsp",
+    "verify_poll_s": 2,
+    "verify_timeout_s": 60,
+    "auto_discover_subnet": "192.168.56",
+    "discover_port": 8181,
+    "bgp_rib_id": "bgp-3625",
+    "bgp_peer": "192.168.56.11",
+    "rpc_timeout_s": 45
+  },
+  "gns3": {
+    "enabled": true,
+    "url": "http://localhost:3080",
+    "project": "Tunzi GA5",
+    "router_prefix": "R",
+    "timeout_s": 3
+  },
+  "nodes": {
+    "R1": {
+      "loopback": "1.1.36.25",
+      "pcc_id": "pcc://192.168.56.11",
+      "mgmt_ip": "192.168.56.11",
+      "x": 0.18,
+      "y": 0.62
+    },
+    "R2": {
+      "loopback": "2.2.36.25",
+      "pcc_id": "pcc://192.168.56.12",
+      "mgmt_ip": "192.168.56.12",
+      "x": 0.5,
+      "y": 0.3
+    },
+    "R3": {
+      "loopback": "3.3.36.25",
+      "pcc_id": "pcc://192.168.56.13",
+      "mgmt_ip": "192.168.56.13",
+      "x": 0.82,
+      "y": 0.62
+    }
+  },
+  "links": [
+    {
+      "id": "L12",
+      "a": "R1",
+      "b": "R2",
+      "a_ip": "10.36.12.1",
+      "b_ip": "10.36.12.2",
+      "a_if": "GigabitEthernet0/0/0/0",
+      "b_if": "GigabitEthernet0/0/0/0",
+      "capacity_mbps": 10.0,
+      "igp_cost": 10,
+      "delay_ms": 1.0,
+      "background_mbps": {
+        "R1>R2": 0.0,
+        "R2>R1": 0.0
+      }
+    },
+    {
+      "id": "L13",
+      "a": "R1",
+      "b": "R3",
+      "a_ip": "10.36.13.1",
+      "b_ip": "10.36.13.2",
+      "a_if": "GigabitEthernet0/0/0/1",
+      "b_if": "GigabitEthernet0/0/0/1",
+      "capacity_mbps": 10.0,
+      "igp_cost": 10,
+      "delay_ms": 1.0,
+      "background_mbps": {
+        "R1>R3": null,
+        "R3>R1": 0.0
+      }
+    },
+    {
+      "id": "L23",
+      "a": "R2",
+      "b": "R3",
+      "a_ip": "10.36.23.1",
+      "b_ip": "10.36.23.2",
+      "a_if": "GigabitEthernet0/0/0/1",
+      "b_if": "GigabitEthernet0/0/0/0",
+      "capacity_mbps": 10.0,
+      "igp_cost": 10,
+      "delay_ms": 1.0,
+      "background_mbps": {
+        "R2>R3": 0.0,
+        "R3>R2": 0.0
+      }
+    }
+  ],
+  "te": {
+    "src": "R1",
+    "dst": "R3",
+    "demand_mbps": null,
+    "threshold_pct": null,
+    "policy": "min_mlu"
+  },
+  "telemetry": {
+    "source": "declared",
+    "replay_csv": "data/sample_load_profile.csv",
+    "cli": {
+      "device_type": "cisco_xr",
+      "username_env": "XR_USER",
+      "password_env": "XR_PASS",
+      "timeout_s": 10
+    }
+  },
+  "gui": {
+    "auto_refresh_s": 10,
+    "history_points": 120
+  },
+  "paths": {
+    "audit_log": "logs/audit.jsonl",
+    "export_dir": "exports"
+  }
+}

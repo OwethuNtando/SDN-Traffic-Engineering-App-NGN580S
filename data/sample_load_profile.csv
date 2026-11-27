@@ -1,0 +1,9 @@
+# Documented load profile for T1/T2 replay (REPLAY provenance = simulated input, not measurement).
+# Derived from student 222313625 (D=3625, A=36, B=25): baseline D kb/s, step to 2D, test duration A = 36 s.
+# Columns: step, elapsed_s, R1->R3 offered demand (Mb/s), background per direction bg_<U>><V> (Mb/s), note
+step,elapsed_s,demand_mbps,bg_R1>R3,bg_R1>R2,bg_R2>R3,note
+0,0,3.625,3.6,0,0,T1 baseline: D kb/s offered
+1,9,5.0,3.6,0,0,ramp
+2,18,7.25,3.6,0,0,T2 congestion: 2D offered
+3,27,7.25,3.6,0,0,sustained congestion
+4,36,3.625,3.6,0,0,end of A-second test: back to baseline

@@ -1,0 +1,1540 @@
+{
+	"info": {
+		"name": "NGN580S GA5 - 222313625 - ODL 0.20.2 (JSON)",
+		"description": "All request bodies are JSON (RFC 8040 /rests). add-lsp/update-lsp print the resulting path in Test Results and the Visualize tab.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "{{odl_user}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{odl_pass}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "odl",
+			"value": "192.168.56.110"
+		},
+		{
+			"key": "odl_user",
+			"value": ""
+		},
+		{
+			"key": "odl_pass",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "0 - Health",
+			"item": [
+				{
+					"name": "GET RESTCONF modules (is ODL up?)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/ietf-yang-library:modules-state?fields=module(name)",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"ietf-yang-library:modules-state"
+							],
+							"port": "8181",
+							"query": [
+								{
+									"key": "fields",
+									"value": "module(name)"
+								}
+							]
+						},
+						"description": ""
+					}
+				}
+			]
+		},
+		{
+			"name": "1 - BGP (R1 <-> ODL)",
+			"item": [
+				{
+					"name": "PUT BGP instance + R1 neighbour",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/openconfig-network-instance:network-instances/network-instance=global-bgp/openconfig-network-instance:protocols/protocol=openconfig-policy-types%3ABGP,bgp-3625",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"openconfig-network-instance:network-instances",
+								"network-instance=global-bgp",
+								"openconfig-network-instance:protocols",
+								"protocol=openconfig-policy-types%3ABGP,bgp-3625"
+							],
+							"port": "8181"
+						},
+						"description": "iBGP AS 4200003625; R1 (192.168.56.11) peers with ODL. IPv4 + BGP-LS. PUT is safe to repeat.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"protocol\": [\n    {\n      \"identifier\": \"openconfig-policy-types:BGP\",\n      \"name\": \"bgp-3625\",\n      \"bgp-openconfig-extensions:bgp\": {\n        \"global\": {\n          \"config\": {\n            \"router-id\": \"192.168.56.110\",\n            \"as\": 4200003625\n          },\n          \"afi-safis\": {\n            \"afi-safi\": [\n              {\n                \"afi-safi-name\": \"openconfig-bgp-types:IPV4-UNICAST\"\n              },\n              {\n                \"afi-safi-name\": \"bgp-openconfig-extensions:LINKSTATE\"\n              }\n            ]\n          }\n        },\n        \"neighbors\": {\n          \"neighbor\": [\n            {\n              \"neighbor-address\": \"192.168.56.11\",\n              \"config\": {\n                \"peer-type\": \"INTERNAL\",\n                \"peer-as\": 4200003625\n              },\n              \"afi-safis\": {\n                \"afi-safi\": [\n                  {\n                    \"afi-safi-name\": \"openconfig-bgp-types:IPV4-UNICAST\"\n                  },\n                  {\n                    \"afi-safi-name\": \"bgp-openconfig-extensions:LINKSTATE\"\n                  }\n                ]\n              }\n            }\n          ]\n        }\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "GET BGP config",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/openconfig-network-instance:network-instances/network-instance=global-bgp/openconfig-network-instance:protocols/protocol=openconfig-policy-types%3ABGP,bgp-3625",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"openconfig-network-instance:network-instances",
+								"network-instance=global-bgp",
+								"openconfig-network-instance:protocols",
+								"protocol=openconfig-policy-types%3ABGP,bgp-3625"
+							],
+							"port": "8181"
+						},
+						"description": ""
+					}
+				},
+				{
+					"name": "GET BGP neighbour state",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/bgp-rib:bgp-rib/rib=bgp-3625/peer=bgp%3A%2F%2F192.168.56.11?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"port": "8181",
+							"path": [
+								"rests",
+								"data",
+								"bgp-rib:bgp-rib",
+								"rib=bgp-3625",
+								"peer=bgp%3A%2F%2F192.168.56.11"
+							],
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": "Fixed: ODL 0.20 RESTCONF needs a list key, so the peer is addressed as bgp://192.168.56.11 (URL-encoded)."
+					}
+				},
+				{
+					"name": "GET BGP session state R1 (ESTABLISHED?)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/openconfig-network-instance:network-instances/network-instance=global-bgp/openconfig-network-instance:protocols/protocol=openconfig-policy-types%3ABGP,bgp-3625/bgp-openconfig-extensions:bgp/neighbors/neighbor=192.168.56.11/state?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"port": "8181",
+							"path": [
+								"rests",
+								"data",
+								"openconfig-network-instance:network-instances",
+								"network-instance=global-bgp",
+								"openconfig-network-instance:protocols",
+								"protocol=openconfig-policy-types%3ABGP,bgp-3625",
+								"bgp-openconfig-extensions:bgp",
+								"neighbors",
+								"neighbor=192.168.56.11",
+								"state"
+							],
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": "Look for session-state: ESTABLISHED."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+									"pm.test('BGP session ESTABLISHED', () => pm.expect(pm.response.text()).to.include('ESTABLISHED'));"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "GET whole BGP RIB (all peers)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/bgp-rib:bgp-rib/rib=bgp-3625?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"port": "8181",
+							"path": [
+								"rests",
+								"data",
+								"bgp-rib:bgp-rib",
+								"rib=bgp-3625"
+							],
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": "Fallback: whole RIB incl. peers and Loc-RIB."
+					}
+				},
+				{
+					"name": "GET BGP-LS / IPv4 Loc-RIB",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/bgp-rib:bgp-rib/rib=bgp-3625/loc-rib?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"bgp-rib:bgp-rib",
+								"rib=bgp-3625",
+								"loc-rib"
+							],
+							"port": "8181",
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": ""
+					}
+				}
+			]
+		},
+		{
+			"name": "2 - PCEP (R1/R2/R3 <-> ODL)",
+			"item": [
+				{
+					"name": "GET PCEP topology (PCCs + LSPs)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/network-topology:network-topology/topology=pcep-topology?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"network-topology:network-topology",
+								"topology=pcep-topology"
+							],
+							"port": "8181",
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": ""
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"const b = pm.response.json();",
+									"const nodes = k(k(b, 'topology')[0], 'node') || [];",
+									"nodes.forEach(n => pm.test('PCC ' + n['node-id'] + ' connected', () => {}));",
+									"showLsps(lspTable(b));",
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "2b - PCE TED graph (do once before add-lsp)",
+			"item": [
+				{
+					"name": "PUT TED graph R1-R2-R3",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/graph:graph-topology/graph=ted%3A%2F%2Fga5-3625",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"graph:graph-topology",
+								"graph=ted%3A%2F%2Fga5-3625"
+							],
+							"port": "8181"
+						},
+						"description": "Gives ODL's PCE server the lab topology (3 routers, 3 links, loopbacks) so it can answer R1's path request for PCE-initiated LSPs. PUT is safe to repeat.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"graph:graph\": [\n    {\n      \"name\": \"ted://ga5-3625\",\n      \"domain-scope\": \"intra-domain\",\n      \"vertex\": [\n        {\n          \"vertex-id\": \"1\",\n          \"name\": \"R1\",\n          \"router-id\": \"1.1.36.25\",\n          \"vertex-type\": \"standard\"\n        },\n        {\n          \"vertex-id\": \"2\",\n          \"name\": \"R2\",\n          \"router-id\": \"2.2.36.25\",\n          \"vertex-type\": \"standard\"\n        },\n        {\n          \"vertex-id\": \"3\",\n          \"name\": \"R3\",\n          \"router-id\": \"3.3.36.25\",\n          \"vertex-type\": \"standard\"\n        }\n      ],\n      \"edge\": [\n        {\n          \"edge-id\": \"12\",\n          \"name\": \"R1-R2\",\n          \"local-vertex-id\": \"1\",\n          \"remote-vertex-id\": \"2\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.12.1\",\n            \"remote-address\": \"10.36.12.2\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        },\n        {\n          \"edge-id\": \"21\",\n          \"name\": \"R2-R1\",\n          \"local-vertex-id\": \"2\",\n          \"remote-vertex-id\": \"1\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.12.2\",\n            \"remote-address\": \"10.36.12.1\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        },\n        {\n          \"edge-id\": \"13\",\n          \"name\": \"R1-R3\",\n          \"local-vertex-id\": \"1\",\n          \"remote-vertex-id\": \"3\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.13.1\",\n            \"remote-address\": \"10.36.13.2\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        },\n        {\n          \"edge-id\": \"31\",\n          \"name\": \"R3-R1\",\n          \"local-vertex-id\": \"3\",\n          \"remote-vertex-id\": \"1\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.13.2\",\n            \"remote-address\": \"10.36.13.1\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        },\n        {\n          \"edge-id\": \"23\",\n          \"name\": \"R2-R3\",\n          \"local-vertex-id\": \"2\",\n          \"remote-vertex-id\": \"3\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.23.1\",\n            \"remote-address\": \"10.36.23.2\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        },\n        {\n          \"edge-id\": \"32\",\n          \"name\": \"R3-R2\",\n          \"local-vertex-id\": \"3\",\n          \"remote-vertex-id\": \"2\",\n          \"edge-attributes\": {\n            \"metric\": 1,\n            \"te-metric\": 1,\n            \"local-address\": \"10.36.23.2\",\n            \"remote-address\": \"10.36.23.1\",\n            \"max-link-bandwidth\": \"12500000\",\n            \"max-resv-link-bandwidth\": \"12500000\",\n            \"unreserved-bandwidth\": [\n              {\n                \"class-type\": 0,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 1,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 2,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 3,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 4,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 5,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 6,\n                \"bandwidth\": \"12500000\"\n              },\n              {\n                \"class-type\": 7,\n                \"bandwidth\": \"12500000\"\n              }\n            ]\n          }\n        }\n      ],\n      \"prefix\": [\n        {\n          \"prefix\": \"1.1.36.25/32\",\n          \"vertex-id\": \"1\"\n        },\n        {\n          \"prefix\": \"2.2.36.25/32\",\n          \"vertex-id\": \"2\"\n        },\n        {\n          \"prefix\": \"3.3.36.25/32\",\n          \"vertex-id\": \"3\"\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('graph stored (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]));"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "GET TED graph (operational)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/graph:graph-topology?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"graph:graph-topology"
+							],
+							"port": "8181",
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": ""
+					}
+				}
+			]
+		},
+		{
+			"name": "3 - LSP over MPLS",
+			"item": [
+				{
+					"name": "update-lsp SN3625-R1-R3 via R2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:update-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:update-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "Re-routes the delegated tunnel-te3625 R1 -> R2 -> R3. The Test Results and Visualize tabs show the new path.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-R1-R3\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"operational\": \"up\",\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.12.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.23.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('ODL accepted the update (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));",
+									"const out = pm.response.text();",
+									"if (out.includes('failure')) pm.test('ODL reported a failure: ' + out, () => pm.expect.fail(out));",
+									"setTimeout(() => fetchLsps(rows => showLsps(rows, 'SN3625-R1-R3')), 6000);",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "update-lsp SN3625-R1-R3 direct",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:update-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:update-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "Re-routes tunnel-te3625 straight R1 -> R3.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-R1-R3\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"operational\": \"up\",\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.13.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('ODL accepted the update (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));",
+									"const out = pm.response.text();",
+									"if (out.includes('failure')) pm.test('ODL reported a failure: ' + out, () => pm.expect.fail(out));",
+									"setTimeout(() => fetchLsps(rows => showLsps(rows, 'SN3625-R1-R3')), 6000);",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "add-lsp SN3625-PCE-R1-R3-VIA-R2 (new LSP via R2)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:add-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:add-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "ODL creates a NEW LSP on R1 (tunnel-te2500+) along R1 -> R2 -> R3. Skipped automatically if it already exists.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-PCE-R1-R3-VIA-R2\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"endpoints-obj\": {\n        \"ipv4\": {\n          \"source-ipv4-address\": \"1.1.36.25\",\n          \"destination-ipv4-address\": \"3.3.36.25\"\n        }\n      },\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.12.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.23.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"fetchLsps(rows => {",
+									"  if (rows.some(r => r.name === 'SN3625-PCE-R1-R3-VIA-R2')) {",
+									"    console.log('SN3625-PCE-R1-R3-VIA-R2 already exists - not adding a duplicate. Send remove-lsp first.');",
+									"    pm.execution.skipRequest();",
+									"  }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('ODL accepted the add (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));",
+									"const out = pm.response.text();",
+									"if (out.includes('failure')) pm.test('ODL reported a failure: ' + out, () => pm.expect.fail(out));",
+									"setTimeout(() => fetchLsps(rows => showLsps(rows, 'SN3625-PCE-R1-R3-VIA-R2')), 6000);",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "add-lsp SN3625-PCE-R1-R3-DIRECT (new LSP direct)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:add-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:add-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "ODL creates a NEW LSP on R1 along R1 -> R3.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-PCE-R1-R3-DIRECT\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\",\n    \"arguments\": {\n      \"odl-pcep-ietf-stateful:lsp\": {\n        \"delegate\": true,\n        \"administrative\": true\n      },\n      \"endpoints-obj\": {\n        \"ipv4\": {\n          \"source-ipv4-address\": \"1.1.36.25\",\n          \"destination-ipv4-address\": \"3.3.36.25\"\n        }\n      },\n      \"ero\": {\n        \"subobject\": [\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"10.36.13.2/32\"\n            }\n          },\n          {\n            \"loose\": false,\n            \"ip-prefix\": {\n              \"ip-prefix\": \"3.3.36.25/32\"\n            }\n          }\n        ]\n      }\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"fetchLsps(rows => {",
+									"  if (rows.some(r => r.name === 'SN3625-PCE-R1-R3-DIRECT')) {",
+									"    console.log('SN3625-PCE-R1-R3-DIRECT already exists - not adding a duplicate. Send remove-lsp first.');",
+									"    pm.execution.skipRequest();",
+									"  }",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('ODL accepted the add (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));",
+									"const out = pm.response.text();",
+									"if (out.includes('failure')) pm.test('ODL reported a failure: ' + out, () => pm.expect.fail(out));",
+									"setTimeout(() => fetchLsps(rows => showLsps(rows, 'SN3625-PCE-R1-R3-DIRECT')), 6000);",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "remove-lsp SN3625-PCE-R1-R3-VIA-R2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:remove-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:remove-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-PCE-R1-R3-VIA-R2\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('removed (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "remove-lsp SN3625-PCE-R1-R3-DIRECT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/operations/network-topology-pcep:remove-lsp",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"operations",
+								"network-topology-pcep:remove-lsp"
+							],
+							"port": "8181"
+						},
+						"description": "",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"input\": {\n    \"node\": \"pcc://192.168.56.11\",\n    \"name\": \"SN3625-PCE-R1-R3-DIRECT\",\n    \"network-topology-ref\": \"/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\\\"pcep-topology\\\"]\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"pm.test('removed (HTTP ' + pm.response.code + ')', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "4 - Show LSP paths",
+			"item": [
+				{
+					"name": "GET R1 LSPs and their paths",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{odl}}:8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=pcc%3A%2F%2F192.168.56.11?content=nonconfig",
+							"protocol": "http",
+							"host": [
+								"{{odl}}"
+							],
+							"path": [
+								"rests",
+								"data",
+								"network-topology:network-topology",
+								"topology=pcep-topology",
+								"node=pcc%3A%2F%2F192.168.56.11"
+							],
+							"port": "8181",
+							"query": [
+								{
+									"key": "content",
+									"value": "nonconfig"
+								}
+							]
+						},
+						"description": "",
+						"body": {
+							"mode": "raw",
+							"raw": "\"Lists every LSP R1 reports to ODL, its tunnel number, state and hop-by-hop path. Open the Visualize tab for a table.\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"// ---- helpers: turn ODL's reported LSPs into a readable path ----",
+									"const NAMES = {\"1.1.36.25\": \"R1\", \"2.2.36.25\": \"R2\", \"3.3.36.25\": \"R3\", \"10.36.12.1\": \"R1\", \"10.36.12.2\": \"R2\", \"10.36.13.1\": \"R1\", \"10.36.13.2\": \"R3\", \"10.36.23.1\": \"R2\", \"10.36.23.2\": \"R3\"};",
+									"function k(o, key) {               // read a key with or without its YANG module prefix",
+									"  if (!o) return undefined;",
+									"  if (key in o) return o[key];",
+									"  const hit = Object.keys(o).find(x => x.endsWith(':' + key));",
+									"  return hit ? o[hit] : undefined;",
+									"}",
+									"function hops(ero) {",
+									"  return ((ero || {}).subobject || []).map(s => {",
+									"    const ip = ((k(s, 'ip-prefix') || {})['ip-prefix'] || '').split('/')[0];",
+									"    return (NAMES[ip] || '?') + ' (' + ip + ')';",
+									"  });",
+									"}",
+									"function lspTable(body) {",
+									"  const rows = [];",
+									"  const nodes = k(body, 'node') || k(k(body, 'topology')?.[0], 'node') || [];",
+									"  nodes.forEach(n => {",
+									"    const pcc = k(n, 'path-computation-client') || {};",
+									"    (k(pcc, 'reported-lsp') || []).forEach(l => {",
+									"      (l.path || []).forEach(p => {",
+									"        const st = k(p, 'lsp') || {};",
+									"        const ids = (k(st, 'tlvs') || {})['lsp-identifiers'] || {};",
+									"        const h = hops(p.ero);",
+									"        rows.push({",
+									"          pcc: n['node-id'], name: l.name,",
+									"          tunnel: ids['tunnel-id'] !== undefined ? 'tunnel-te' + ids['tunnel-id'] : '-',",
+									"          state: st.operational || '-', delegated: String(st.delegate),",
+									"          path: ['R1 (1.1.36.25)'].concat(h).join('  ->  ') || '(no ERO reported)'",
+									"        });",
+									"      });",
+									"    });",
+									"  });",
+									"  return rows;",
+									"}",
+									"function showLsps(rows, onlyName) {",
+									"  const shown = onlyName ? rows.filter(r => r.name === onlyName) : rows;",
+									"  shown.forEach(r => pm.test(r.name + ' [' + r.tunnel + ', ' + r.state + ']: ' + r.path, () => {",
+									"    pm.expect(r.state).to.not.eql('down');",
+									"  }));",
+									"  if (onlyName && shown.length === 0)",
+									"    pm.test(onlyName + ' not reported by R1 yet - send \"4 - Show LSP paths\" in a few seconds', () => {});",
+									"  pm.visualizer.set(`",
+									"    <h3 style=\"font-family:sans-serif\">LSPs reported by the PCCs</h3>",
+									"    <table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;font-family:monospace\">",
+									"      <tr><th>LSP name</th><th>Tunnel</th><th>State</th><th>Delegated</th><th>Path (ERO)</th></tr>",
+									"      {{#each rows}}<tr><td>{{name}}</td><td>{{tunnel}}</td><td>{{state}}</td><td>{{delegated}}</td><td>{{path}}</td></tr>{{/each}}",
+									"    </table>`, { rows: shown });",
+									"}",
+									"function fetchLsps(cb) {",
+									"  pm.sendRequest({",
+									"    url: 'http://' + pm.collectionVariables.get('odl') + ':8181/rests/data/network-topology:network-topology/topology=pcep-topology/node=' + encodeURIComponent('pcc://192.168.56.11') + '?content=nonconfig',",
+									"    method: 'GET', header: { Accept: 'application/json' },",
+									"    auth: { type: 'basic', basic: [",
+									"      { key: 'username', value: pm.collectionVariables.get('odl_user') },",
+									"      { key: 'password', value: pm.collectionVariables.get('odl_pass') }] }",
+									"  }, (err, res) => cb(err ? [] : lspTable(res.json())));",
+									"}",
+									"showLsps(lspTable(pm.response.json()));",
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
